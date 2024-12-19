@@ -1,0 +1,137 @@
+services:
+  # PostgreSQL Database Service
+  postgresql:
+    container_name: ms_pg_sql
+    image: postgres
+    environment:
+      POSTGRES_USER: fayupable
+      POSTGRES_PASSWORD: fayupable
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # pgAdmin for PostgreSQL Management
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # MySQL Database Service
+  mysql:
+    container_name: ms_mysql
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: fayupable
+      MYSQL_DATABASE: fayupable_db
+      MYSQL_USER: fayupable
+      MYSQL_PASSWORD: fayupable
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # Zipkin for Distributed Tracing
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - microservices-net
+
+  # MongoDB Database Service
+  mongodb:
+    image: mongo
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=fayupable
+      - MONGO_INITDB_ROOT_PASSWORD=fayupable
+    networks:
+      - microservices-net
+
+  # Mongo Express for MongoDB Management
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=fayupable
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=fayupable
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - microservices-net
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - microservices-net
+
+  # Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+    ports:
+      - "9092:9092"
+    networks:
+      - microservices-net
+
+  # Mail Dev for Simulating Email Services
+  mail-dev:
+    container_name: mail_dev
+    image: maildev/maildev
+    ports:
+      - "1080:1080"  # Web interface
+      - "1025:1025"  # SMTP server
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  mongo:
+  postgres:
+  pgadmin:
+  mysql:
