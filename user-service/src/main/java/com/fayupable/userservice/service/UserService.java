@@ -19,9 +19,9 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final UserMapper userMapper;
 
-    public Long createUser(UserRequest userRequest) {
+    public String createUser(UserRequest userRequest) {
         var user = this.userRepository.save(this.userMapper.toUser(userRequest));
-        return user.getId();
+        return String.valueOf(user.getId());
     }
 
     public void updateUser(UserRequest userRequest) {
@@ -59,10 +59,11 @@ public class UserService implements IUserService {
     }
 
     public boolean existsById(String id) {
-        return this.userRepository.findById(Long.valueOf(id)).isPresent();
+        return this.userRepository.findById(id).isPresent();
     }
 
     public void deleteUser(String id) {
-        this.userRepository.deleteById(Long.valueOf(id));
+        this.userRepository.deleteById(id);
+
     }
 }

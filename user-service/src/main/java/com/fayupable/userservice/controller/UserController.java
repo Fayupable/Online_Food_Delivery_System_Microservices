@@ -17,7 +17,7 @@ public class UserController {
     private final IUserService userService;
 
     @PostMapping
-    public ResponseEntity<Long> createUser(
+    public ResponseEntity<String> createUser(
             @RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(userService.createUser(userRequest));
     }

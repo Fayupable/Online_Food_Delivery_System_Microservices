@@ -6,7 +6,7 @@ import com.fayupable.userservice.dto.UserResponse;
 import java.util.List;
 
 public interface IUserService {
-    Long createUser(UserRequest userRequest);
+    String createUser(UserRequest userRequest);
 
     void updateUser(UserRequest userRequest);
 

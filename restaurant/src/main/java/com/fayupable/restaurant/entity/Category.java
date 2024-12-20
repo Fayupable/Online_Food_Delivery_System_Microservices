@@ -11,17 +11,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Restaurant {
+public class Category {
     @Id
-    private String id;
+    @GeneratedValue
+    private Integer id;
     private String name;
     private String description;
-    private String email;
-    private String contactNumber;
-    @Embedded
-    private Address address;
-
-    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
     private List<Product> products;
-
 }
+
+// /Users/pc/.m2/repository/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar
