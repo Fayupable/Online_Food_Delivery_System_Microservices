@@ -9,5 +9,6 @@ public record RestaurantResponse(
         String email,
         String contactNumber,
         Address address
+
 ) {
 }

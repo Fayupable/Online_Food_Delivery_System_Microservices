@@ -1,6 +1,5 @@
 package com.fayupable.userservice.entity;
 
-import jakarta.persistence.Embeddable;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated
-@Embeddable
 public class Address {
     private String street;
     private String city;

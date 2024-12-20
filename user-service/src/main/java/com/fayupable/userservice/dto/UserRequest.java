@@ -4,7 +4,7 @@ import com.fayupable.userservice.entity.Address;
 import jakarta.validation.constraints.NotNull;
 
 public record UserRequest(
-        Long id,
+        String id,
         @NotNull(message = "First name is required")
         String firstName,
         @NotNull(message = "Last name is required")

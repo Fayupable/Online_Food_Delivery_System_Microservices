@@ -1,5 +1,6 @@
 package com.fayupable.restaurant.handler;
 
+import com.fayupable.restaurant.exception.ProductPurchaseException;
 import com.fayupable.restaurant.exception.RestaurantNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,4 +36,13 @@ public class GlobalExceptionHandler {
                 .status(BAD_REQUEST)
                 .body(new ErrorResponse(errors));
     }
+
+    @ExceptionHandler(ProductPurchaseException.class)
+    public ResponseEntity<String> handle(ProductPurchaseException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(exp.getMessage());
+    }
+
+
 }

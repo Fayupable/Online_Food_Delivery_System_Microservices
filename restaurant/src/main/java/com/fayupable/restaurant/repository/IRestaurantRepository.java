@@ -1,7 +1,7 @@
 package com.fayupable.restaurant.repository;
 
 import com.fayupable.restaurant.entity.Restaurant;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IRestaurantRepository extends MongoRepository<Restaurant, String> {
+public interface IRestaurantRepository extends JpaRepository<Restaurant, String> {
 }
