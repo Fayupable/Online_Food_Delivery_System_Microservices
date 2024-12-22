@@ -7,6 +7,8 @@ import com.fayupable.orderservice.kafka.OrderProducer;
 import com.fayupable.orderservice.mapper.OrderMapper;
 import com.fayupable.orderservice.orderline.OrderLineRequest;
 import com.fayupable.orderservice.orderline.OrderLineService;
+import com.fayupable.orderservice.payment.PaymentClient;
+import com.fayupable.orderservice.payment.PaymentRequest;
 import com.fayupable.orderservice.product.ProductClient;
 import com.fayupable.orderservice.product.PurchaseRequest;
 import com.fayupable.orderservice.user.IUserClient;
@@ -28,6 +30,7 @@ public class OrderService implements IOrderService {
     private final OrderMapper orderMapper;
     private final OrderLineService orderLineService;
     private final OrderProducer orderProducer;
+    private final PaymentClient paymentClient;
 
 
     @Override
@@ -58,6 +61,14 @@ public class OrderService implements IOrderService {
         //persist order lines
 
         //start payment process
+        var paymentRequest = new PaymentRequest(
+                orderRequest.totalAmount(),
+                orderRequest.paymentMethod(),
+                order.getId(),
+                order.getReference(),
+                user
+        );
+        paymentClient.requestOrderPayment(paymentRequest);
 
         //send the order confirmation --> notification microservice(kafka)
 

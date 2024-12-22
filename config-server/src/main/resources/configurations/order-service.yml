@@ -29,4 +29,4 @@ application:
   config:
     user-url: http://localhost:8222/api/v1/users
     restaurant-url: http://localhost:8222/api/v1/restaurants
-    payment-url: http://localhost:822/api/v1/payments
+    payment-url: http://localhost:8222/api/v1/payments
